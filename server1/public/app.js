@@ -1,17 +1,16 @@
 var app = {
+	peer: new Peer({key: "oftz4qdmchjxxbt9"}),
 	
-	writeId: function(destId) {
-		document.getElementById("iframeId").innerHTML = destId;
+	write: function(status) {
+		document.getElementById("status").innerHTML = status;
 	},
 	
 	connect: function(destId) {
-		this.writeId(destId);
-			
-		var peer = new Peer({key: "oftz4qdmchjxxbt9"});
-		var conn = peer.connect(destId);
-
+		var conn = app.peer.connect(destId);
+		
 		conn.on("open", function() {
 			conn.send("CONNECTED");
+			app.write("CONNECTED");
 		});
 	}
 	
