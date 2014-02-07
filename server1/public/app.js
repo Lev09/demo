@@ -1,7 +1,7 @@
 var app = {
 	
-	writeId: function(id) {
-		document.getElementById("iframeId").innerHTML = id;
+	writeId: function(destId) {
+		document.getElementById("iframeId").innerHTML = destId;
 	},
 	
 	connect: function(destId) {
