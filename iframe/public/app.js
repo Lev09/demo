@@ -1,5 +1,5 @@
-$(function () {
-	{
+$(function() {
+	({
 		peer: new Peer({key: "oftz4qdmchjxxbt9"}),
 		
 		sendToParent: function(id) {
@@ -7,13 +7,14 @@ $(function () {
 		},
 		
 		init: function() {
+			var app = this;
 			
 			this.peer.on('open', function(id) {
-				this.sendToParent(id);
+				app.sendToParent(id);
 			});
 
 		}
 	
-	}.init();
+	}).init();
 
 });

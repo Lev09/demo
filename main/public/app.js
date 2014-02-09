@@ -1,5 +1,5 @@
 $(function() {
-	{
+	({
 		peer: new Peer({key: "oftz4qdmchjxxbt9"}),
 	
 		connect: function(destId) {
@@ -10,12 +10,15 @@ $(function() {
 			});
 		},
 		
-		init: function() {			
+		init: function() {
+			var app = this;			
+			
 			window.addEventListener("message", function(event) {
-				this.connect(event.data);
+				app.connect(event.data);
 			}, false);
+			
 		}
 		
-	}.init();
+	}).init();
 
 });
