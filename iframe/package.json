@@ -1,6 +1,6 @@
 {
-  "name": "nodejs",
-  "description": "server for phongap app",
+  "name": "demo",
+  "description": "demo",
   "version": "0.0.1",
   "private": true,
   "dependencies": {
