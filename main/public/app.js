@@ -1,18 +1,16 @@
-angular.module('app')
+angular.module('app', [])
 .controller('controller', function($scope) {
 	
-	$scope.peerTransfer = {
-		
+	$scope.peerTransfer = {	
+
 		reciveData: function(data){
-			//your code
-			alert('main' + data);
+			alert('main ' + data);
 		}
-		
+
 	};
-	$scope.send = function() {
 	
-		$scope.peerTransfer.sendData("haello");
-		
+	$scope.send = function() {
+		$scope.peerTransfer.sendData("hello!");
 	};
 
 });

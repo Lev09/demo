@@ -4,13 +4,10 @@
 		<script src="lib/peerjs/peer.min.js"></script>
 		<script src="lib/jquery/jquery.min.js"></script>
 		<script src="lib/angular/angular.min.js"></script>
-		<script>
-			angular.module('app', []);
-		</script>
 		<script src="app.js"></script>
 		<script src="directive.js"></script>
 	</head>
-	<body>
-		<div peer-id="" peer-transfer="peerTransfer"></div>
+	<body ng-controller="controller">
+		<div peer-id peer-transfer="peerTransfer"></div>
 	</body>
 </html>

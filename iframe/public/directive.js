@@ -1,6 +1,7 @@
 angular.module('app')
 .directive('peerId', function() {
 	return {
+		restrict: "A",
 		template: '{{peerID}}',
 		scope: {
 			peerTransfer: '='
@@ -11,7 +12,6 @@ angular.module('app')
 			$(function() {
 				({
 					peer: new Peer({key: "oftz4qdmchjxxbt9"}),
-					parentScope: scope.$parent,
 
 					initDataTransfer: function(conn) {
 						var app = this;
@@ -28,43 +28,46 @@ angular.module('app')
 					},
 	
 					sendToParent: function(id) {
-						if(document.referrer != "") {
-							window.parent.postMessage(id, document.referrer);
-						}
+						window.parent.postMessage(id, document.referrer);
 					},
 	
 					init: function() {
 						var app = this;
-						//in main page
-						this.createIframe();
-						this.initEvent();
-						//in iframe
-						this.peer.on('open', function(id) {
-							app.sendToParent(id);
+						
+						//work in main page
+						if(document.referrer == "") {
+							this.createIframe();
+							this.initEvent();
+						}
+						
+						//work in iframe
+						else {
+						
+							this.peer.on('open', function(id) {
+								app.sendToParent(id);
 							
-							app.peer.on('connection', function(conn) {							
-								app.initDataTransfer(conn);
+								app.peer.on('connection', function(conn) {							
+									app.initDataTransfer(conn);
+								});
+							
 							});
-							
-						});
-
+						
+						}
 					},
 					
 					createIframe: function() {
-						if(document.referrer == "") {
-							$(elem).prepend('<iframe src="'+attr.peerId+'"></iframe>');
-						}
+						$(elem).prepend('<iframe src="'+attr.peerId+'"></iframe>');
 					},
 
 					initEvent: function() {
 						var app = this;			
-	
+						
 						window.addEventListener("message", function(event) {
 							if(event.origin == attr.peerId) {
 								app.connect(event.data);
 							}
 						}, false);
-	
+					
 					},
 
 					connect: function(destId) {
