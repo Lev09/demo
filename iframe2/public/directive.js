@@ -2,13 +2,30 @@ angular.module('app')
 .directive('peerId', function() {
 	return {
 		template: '{{peerID}}',
-		scope: {},
+		scope: {
+			peerTransfer: '='
+		},
 		
 		link: function(scope, elem, attr) {
 				
 			$(function() {
 				({
 					peer: new Peer({key: "oftz4qdmchjxxbt9"}),
+					parentScope: scope.$parent,
+
+					initDataTransfer: function(conn) {
+						var app = this;
+							
+						conn.on('data', function(data) {
+							scope.peerTransfer.reciveData(data)
+						});
+					
+						scope.peerTransfer.sendData = function(data) {
+							conn.send(data)
+						};
+						scope.$apply();
+
+					},
 	
 					sendToParent: function(id) {
 						if(document.referrer != "") {
@@ -18,11 +35,17 @@ angular.module('app')
 	
 					init: function() {
 						var app = this;
-					
+						//in main page
 						this.createIframe();
 						this.initEvent();
+						//in iframe
 						this.peer.on('open', function(id) {
 							app.sendToParent(id);
+							
+							app.peer.on('connection', function(conn) {							
+								app.initDataTransfer(conn);
+							});
+							
 						});
 
 					},
@@ -45,11 +68,13 @@ angular.module('app')
 					},
 
 					connect: function(destId) {
+						var app = this;
 						var conn = this.peer.connect(destId);
 
 						conn.on("open", function() {
 							scope.peerID = conn.peer;
 							scope.$apply();
+							app.initDataTransfer(conn);
 						});
 					}
 					
