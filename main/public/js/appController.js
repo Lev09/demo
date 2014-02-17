@@ -1,7 +1,7 @@
 angular.module('app', [])
 .controller('controller', function($scope) {
 	
-	$scope.peerTransfer = {	
+	$scope.peerConnection = {	
 
 		reciveData: function(data){
 			alert('main ' + data);
@@ -10,7 +10,7 @@ angular.module('app', [])
 	};
 	
 	$scope.send = function() {
-		$scope.peerTransfer.sendData("hello!");
+		$scope.peerConnection.sendData("hello!");
 	};
 
 });

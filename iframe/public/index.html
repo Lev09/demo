@@ -4,10 +4,10 @@
 		<script src="lib/peerjs/peer.min.js"></script>
 		<script src="lib/jquery/jquery.min.js"></script>
 		<script src="lib/angular/angular.min.js"></script>
-		<script src="app.js"></script>
-		<script src="directive.js"></script>
+		<script src="js/appController.js"></script>
+		<script src="js/iframeDirective.js"></script>
 	</head>
 	<body ng-controller="controller">
-		<div peer-id peer-transfer="peerTransfer"></div>
+		<iframe-directive peer-connection="peerConnection"></iframe-directive>
 	</body>
 </html>

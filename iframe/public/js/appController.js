@@ -1,10 +1,10 @@
 angular.module('app', [])
 .controller('controller', function($scope) {
 	
-	$scope.peerTransfer = {
+	$scope.peerConnection = {
 		
 		reciveData: function(data){
-			alert('iframe1 '+ data);
+			alert('iframe1 ' + data);
 		}
 		
 	};
