@@ -6,59 +6,28 @@ angular.module('app')
 		scope: {
 			peerConnection: '=',
 		},
-		template: '<div>{{template}}</div>',
+		template: '<div>{{peerID}}</div>',
 		
 		link: function(scope, elem, attr) {
 			
-			scope.iframeUrl = $sce.trustAsResourceUrl(attr.url);
 			var app = {
-				peer: new Peer({key: "oftz4qdmchjxxbt9"}),
-				
-				setTemplate: function() {
-					scope.template = "<iframe src=" + scope.iframeUrl + "></iframe> {{peerID}}";
-					scope.$apply();
-				},
-
-				initDataTransfer: function(conn) {
-					var app = this;
-						
-					conn.on('data', function(data) {
-						scope.peerConnection.reciveData(data)
-					});
-				
-					scope.peerConnection.sendData = function(data) {
-						conn.send(data)
-					};
-					scope.$apply();
-
-				},
-
-				sendToParent: function(id) {
-					window.parent.postMessage(id, document.referrer);
-				},
+				peer: new Peer({key: scope.peerConnection.key}),
 
 				init: function() {
-					var app = this;
-					
 					//work in main page
 					if(document.referrer == "") {
-						this.setTemplate();
-						this.initEvent();
+						this.initMainPage();
 					}
 					
 					//work in iframe
 					else {
-					
-						this.peer.on('open', function(id) {
-							app.sendToParent(id);
-						
-							app.peer.on('connection', function(conn) {							
-								app.initDataTransfer(conn);
-							});
-						
-						});
-					
+						this.initIframe();
 					}
+				},
+				
+				initMainPage: function() {
+					this.initEvent();
+					this.createIframe();
 				},
 				
 				initEvent: function() {
@@ -71,18 +40,56 @@ angular.module('app')
 					}, false);
 				
 				},
+				
+				createIframe: function() {
+					$(elem).prepend("<iframe src=" + attr.url + "></iframe>");
+				},
 
 				connect: function(destId) {
 					var app = this;
 					var conn = this.peer.connect(destId);
 
 					conn.on("open", function() {
-						scope.peerID = conn.peer;
-						scope.$apply();
+						scope.$apply(function() {
+							scope.peerID = conn.peer;
+						});
 						app.initDataTransfer(conn);
 					});
-				}
+				},
 				
+				initIframe: function() {
+					var app = this;
+					
+					this.peer.on('open', function(id) {
+						app.sendToParent(id);
+					
+						app.peer.on('connection', function(conn) {							
+							app.initDataTransfer(conn);
+						});
+					
+					});
+				
+				},
+
+				sendToParent: function(id) {
+					window.parent.postMessage(id, document.referrer);
+				},
+				
+				//this function will be used in both side
+				initDataTransfer: function(conn) {
+	
+					conn.on('data', function(data) {
+						scope.peerConnection.reciveData(data)
+					});
+				
+					scope.$apply(function() {
+						scope.peerConnection.sendData = function(data) {
+							conn.send(data)
+						};
+					});
+
+				}
+
 			};
 				
 			app.init();

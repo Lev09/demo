@@ -7,7 +7,7 @@
 		<script src="js/appController.js"></script>
 		<script src="js/iframeDirective.js"></script>
 	</head>
-	<body ng-controller="controller">
+	<body ng-controller="appController">
 		<iframe-directive url="http://localhost:8002" peer-connection="peerConnection"></iframe-directive>
 		<iframe-directive url="http://localhost:8003" peer-connection="peerConnection"></iframe-directive>
 		<button ng-click="send()">send</button>
