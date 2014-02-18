@@ -2,12 +2,12 @@
 <html ng-app="app">
 	<head>
 		<script src="lib/peerjs/peer.min.js"></script>
-		<script src="lib/jquery/jquery.min.js"></script>
+		<script src="lib/jquery/dist/jquery.min.js"></script>
 		<script src="lib/angular/angular.min.js"></script>
 		<script src="js/appController.js"></script>
-		<script src="js/iframeDirective.js"></script>
+		<script src="js/peerConnectionIframeDirective.js"></script>
 	</head>
 	<body ng-controller="appController">
-		<iframe-directive peer-connection="peerConnection"></iframe-directive>
+		<peer-connection interface="interface"></peer-connection>
 	</body>
 </html>

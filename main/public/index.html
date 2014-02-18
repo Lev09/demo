@@ -2,14 +2,14 @@
 <html ng-app="app">
 	<head>
 		<script src="lib/peerjs/peer.min.js"></script>
-		<script src="lib/jquery/jquery.min.js"></script>
+		<script src="lib/jquery/dist/jquery.min.js"></script>
 		<script src="lib/angular/angular.min.js"></script>
 		<script src="js/appController.js"></script>
-		<script src="js/iframeDirective.js"></script>
+		<script src="js/peerConnectionMainDirective.js"></script>
 	</head>
 	<body ng-controller="appController">
-		<iframe-directive url="http://localhost:8002" peer-connection="peerConnection"></iframe-directive>
-		<iframe-directive url="http://localhost:8003" peer-connection="peerConnection"></iframe-directive>
+		<peer-connection ng-src="http://localhost:8002" interface="interface"></peer-connection>
+		<peer-connection ng-src="http://localhost:8003" interface="interface"></peer-connection>
 		<button ng-click="send()">send</button>
 	</body>
 </html>

@@ -1,7 +1,7 @@
 angular.module('app', [])
 .controller('appController', function($scope) {
 	
-	$scope.peerConnection = {
+	$scope.interface = {
 		key: 'oftz4qdmchjxxbt9',
 		
 		reciveData: function(data){
@@ -11,7 +11,7 @@ angular.module('app', [])
 	};
 	
 	$scope.send = function() {
-		$scope.peerConnection.sendData("hello!");
+		$scope.interface.sendData("hello!");
 	};
 
 });
