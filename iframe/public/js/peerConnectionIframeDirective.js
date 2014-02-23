@@ -1,12 +1,6 @@
 angular.module('app')
 .directive('peerConnection', function() {
 	
-	var peer = null;
-		
-	var	setPeerKey = function(key) {
-		peer = new Peer({key:key});
-	};
-	
 	return {
 		restrict: 'E',
 		
@@ -25,15 +19,22 @@ angular.module('app')
 		link: function(scope, elem, attr) {
 			
 			var app = {
+				peer: null,
+				
+				setPeerKey: function(key) {
+					if(this.peer === null) {
+						this.peer = new Peer({key:key});
+					}
+				},
 			
 				init: function() {
 					var app = this;
-					setPeerKey(scope.config.key);
+					this.setPeerKey(scope.config.key);
 					
-					peer.on('open', function(id) {
+					this.peer.on('open', function(id) {
 						app.sendToParent(id);
 					
-						peer.on('connection', function(conn) {							
+						app.peer.on('connection', function(conn) {							
 							app.initDataTransfer(conn);
 						});
 					

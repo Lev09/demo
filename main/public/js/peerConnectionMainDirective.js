@@ -1,14 +1,6 @@
 angular.module('app')
 .directive('peerConnection', ['$sce', function($sce) {
 	
-	var peer = null;
-		
-	var	setPeerKey = function(key) {
-		if(peer === null) {
-			peer = new Peer({key:key});
-		}
-	};
-	
 	return {
 		restrict: 'E',
 		
@@ -29,10 +21,18 @@ angular.module('app')
 			scope.url = $sce.trustAsResourceUrl(attr.src);
 			
 			var app = {
+				peer: null,
 				
 				init: function() {
+					this.setPeerKey(scope.config.key);
 					this.initEvent();
-					setPeerKey(scope.config.key);
+					this.initOnPeerError();
+				},
+				
+				setPeerKey: function(key) {
+					if(this.peer === null) {
+						this.peer = new Peer({key:key});
+					}
 				},
 				
 				initEvent: function() {
@@ -46,9 +46,17 @@ angular.module('app')
 				
 				},
 				
+				initOnPeerError: function() {
+					this.peer.on('error', function(error) {
+						scope.config.onError(error);
+					});
+				},
+				
 				connect: function(destId) {
 					var app = this;
-					var conn = peer.connect(destId);
+					var conn = this.peer.connect(destId);
+					this.initOnConnectionError(conn);
+					this.initDisconnection(conn);
 
 					conn.on("open", function() {
 						app.initDataTransfer(conn);
@@ -67,6 +75,24 @@ angular.module('app')
 						};
 					});
 
+				},
+				
+				initOnConnectionError: function(conn) {
+					conn.on('error', function(error) {
+						scope.config.onError(error);
+					});
+				},
+				
+				initDisconnection: function(conn) {
+				
+					scope.config.disconnect = function() {
+						conn.close()
+					};
+					
+					scope.config.destroy = function() {
+						peer.destroy();
+					};
+				
 				}
 
 			};

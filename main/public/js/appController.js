@@ -7,7 +7,12 @@ angular.module('app', [])
 			var controller = this;
 			
 			$scope.peerConfig = {
-				key: "oftz4qdmchjxxbt9"
+				key: "oftz4qdmchjxxbt9",
+				
+				onError: function(error) {
+					alert(error.message);
+				}
+				
 			};
 	
 			$scope.interface = {
@@ -19,13 +24,17 @@ angular.module('app', [])
 			};
 			
 			$scope.send = function() {
-				controller.send("hello");
+				$scope.interface.sendData("hello");
+			};
+			
+			$scope.destroy = function() {
+				$scope.peerConfig.destroy();
+			};
+			
+			$scope.disconnect = function() {
+				$scope.peerConfig.disconnect();
 			};
 		
-		},
-		
-		send: function(data) {
-			$scope.interface.sendData(data);
 		},
 		
 		reciveData: function(data) {
