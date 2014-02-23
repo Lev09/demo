@@ -1,27 +1,45 @@
 angular.module('app')
-.directive('peerConnection', function() {
+.directive('peerConnection', ['$sce', function($sce) {
+	
+	var peer = null;
+		
+	var	setPeerKey = function(key) {
+		if(peer === null) {
+			peer = new Peer({key:key});
+		}
+	};
+	
 	return {
 		restrict: 'E',
+		
 		replace: true,
+		
 		scope: {
+		
 			interface: '=',
+			
+			config: '='
+		
 		},
-		template: '<iframe></iframe>',
+		
+		template: '<iframe ng-src="{{url}}"></iframe>',
 		
 		link: function(scope, elem, attr) {
 			
+			scope.url = $sce.trustAsResourceUrl(attr.src);
+			
 			var app = {
-				peer: new Peer({key: scope.interface.key}),
 				
 				init: function() {
 					this.initEvent();
+					setPeerKey(scope.config.key);
 				},
 				
 				initEvent: function() {
 					var app = this;			
 					
 					window.addEventListener("message", function(event) {
-						if(event.origin == attr.ngSrc) {
+						if(event.origin == attr.src) {
 							app.connect(event.data);
 						}
 					}, false);
@@ -30,18 +48,15 @@ angular.module('app')
 				
 				connect: function(destId) {
 					var app = this;
-					var conn = this.peer.connect(destId);
+					var conn = peer.connect(destId);
 
 					conn.on("open", function() {
-						scope.$apply(function() {
-							scope.peerID = conn.peer;
-						});
 						app.initDataTransfer(conn);
 					});
 				},
 				
 				initDataTransfer: function(conn) {
-					$("body").append('<h3>Connected</h3> ' + scope.peerID);
+					
 					conn.on('data', function(data) {
 						scope.interface.reciveData(data)
 					});
@@ -60,4 +75,5 @@ angular.module('app')
 		}
 		
 	};
-});
+	
+}]);

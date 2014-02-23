@@ -1,17 +1,39 @@
 angular.module('app', [])
 .controller('appController', function($scope) {
 	
-	$scope.interface = {
-		key: 'oftz4qdmchjxxbt9',
+	var controller = {
 		
-		reciveData: function(data){
+		init: function() {
+			var controller = this;
+			
+			$scope.peerConfig = {
+				key: "oftz4qdmchjxxbt9"
+			};
+	
+			$scope.interface = {
+	
+				reciveData: function(data){
+					controller.reciveData(data);
+				}
+
+			};
+			
+			$scope.send = function() {
+				controller.send("hello");
+			};
+		
+		},
+		
+		send: function(data) {
+			$scope.interface.sendData(data);
+		},
+		
+		reciveData: function(data) {
 			alert('main ' + data);
 		}
-
+	
 	};
 	
-	$scope.send = function() {
-		$scope.interface.sendData("hello!");
-	};
-
+	controller.init();
+	
 });
