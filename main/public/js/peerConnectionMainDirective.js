@@ -1,17 +1,12 @@
 angular.module('app')
 .directive('peerConnection', ['$sce', function($sce) {
-	
+
 	return {
 		restrict: 'E',
-		
 		replace: true,
 		
 		scope: {
-		
-			interface: '=',
-			
-			config: '='
-		
+			interface: '='
 		},
 		
 		template: '<iframe ng-src="{{url}}"></iframe>',
@@ -20,86 +15,91 @@ angular.module('app')
 			
 			scope.url = $sce.trustAsResourceUrl(attr.src);
 			
-			var app = {
+			var peerService = {
+				key: "oftz4qdmchjxxbt9",
 				peer: null,
 				
 				init: function() {
-					this.setPeerKey(scope.config.key);
+					this.createPeerIfNeded(this.key);
 					this.initEvent();
-					this.initOnPeerError();
 				},
 				
-				setPeerKey: function(key) {
+				createPeerIfNeded: function(key) {
 					if(this.peer === null) {
 						this.peer = new Peer({key:key});
+
+						this.peer.on('error', function(error) {
+							peerService.onError(error);
+						});
+
 					}
 				},
 				
 				initEvent: function() {
-					var app = this;			
+					var peerService = this;			
 					
 					window.addEventListener("message", function(event) {
-						if(event.origin == attr.src) {
-							app.connect(event.data);
-						}
+							peerService.connect(event.origin, event.data);
 					}, false);
 				
 				},
 				
-				initOnPeerError: function() {
-					this.peer.on('error', function(error) {
-						scope.config.onError(error);
-					});
-				},
-				
-				connect: function(destId) {
-					var app = this;
-					var conn = this.peer.connect(destId);
-					this.initOnConnectionError(conn);
-					this.initDisconnection(conn);
+				connect: function(destOrigin, destId) {
+					var peerService = this;
+					if(destOrigin === attr.src) {	
+						var conn = this.peer.connect(destId);
 
-					conn.on("open", function() {
-						app.initDataTransfer(conn);
-					});
-				},
-				
-				initDataTransfer: function(conn) {
+						conn.on('open', function() {
+							peerService.initInterface(conn);
+							peerService.initConnection(conn);
+						});
 					
-					conn.on('data', function(data) {
-						scope.interface.reciveData(data)
-					});
-				
-					scope.$apply(function() {
-						scope.interface.sendData = function(data) {
-							conn.send(data)
-						};
-					});
-
+					}
 				},
 				
-				initOnConnectionError: function(conn) {
+				initInterface: function(conn) {
+				
+					scope.interface.sendData = function(data) {
+						conn.send(data);
+					};
+				
+					scope.interface.disconnectPeer = function() {
+						conn.close();
+					};
+					
+					scope.interface.destroyPeer = function() {
+						this.peer.destroy();
+					};
+				
+				},
+				
+				initConnection: function(conn) {
+					var peerService = this;
+					
 					conn.on('error', function(error) {
-						scope.config.onError(error);
+						peerService.onError(error);
 					});
+
+					conn.on('data', function(data) {
+						peerService.onData(data);
+					});					
+					
 				},
 				
-				initDisconnection: function(conn) {
-				
-					scope.config.disconnect = function() {
-						conn.close()
-					};
-					
-					scope.config.destroy = function() {
-						peer.destroy();
-					};
-				
+				onError: function(error) {
+					scope.interface.onError(error);
+				},
+
+				onData: function(data) {
+					scope.interface.reciveData(data);
 				}
 
 			};
 				
-			app.init();
+			peerService.init();
 		}
 		
 	};
 	
 }]);
+

@@ -2,43 +2,55 @@ angular.module('app', [])
 .controller('appController', function($scope) {
 	
 	var controller = {
+
+		interface: {
+
+			reciveData: function(data){
+				controller.reciveData(data);
+			},
+			
+			onError: function(error) {
+				controller.onError(error);
+			}
+			
+		},
 		
 		init: function() {
 			var controller = this;
-			
-			$scope.peerConfig = {
-				key: "oftz4qdmchjxxbt9",
-				
-				onError: function(error) {
-					alert(error.message);
-				}
-				
-			};
-	
-			$scope.interface = {
-	
-				reciveData: function(data){
-					controller.reciveData(data);
-				}
-
-			};
+			$scope.interface = this.interface;
 			
 			$scope.send = function() {
-				$scope.interface.sendData("hello");
+				controller.sendData("hello");
 			};
 			
 			$scope.destroy = function() {
-				$scope.peerConfig.destroy();
+				controller.destroyPeer();
 			};
 			
 			$scope.disconnect = function() {
-				$scope.peerConfig.disconnect();
+				controller.disconnectPeer();
 			};
 		
 		},
 		
+		sendData: function(data) {
+			this.interface.sendData(data);
+		},
+		
 		reciveData: function(data) {
 			alert('main ' + data);
+		},
+		
+		onError: function(error) {
+			alert(error.message);
+		},
+		
+		disconnectPeer: function() {
+			this.interface.disconnectPeer();
+		},
+		
+		destroyPeer: function() {
+			this.interface.destroyPeer();
 		}
 	
 	};

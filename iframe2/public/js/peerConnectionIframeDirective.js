@@ -3,39 +3,36 @@ angular.module('app')
 	
 	return {
 		restrict: 'E',
-		
 		replace: true,
 		
 		scope: {
-		
-			interface: '=',
-			
-			config: '='
-		
+			interface: '='
 		},
 
 		template: '<div></div>',
 		
 		link: function(scope, elem, attr) {
 			
-			var app = {
+			var peerService = {
+				key: "oftz4qdmchjxxbt9",
 				peer: null,
 				
-				setPeerKey: function(key) {
+				createPeerIfNeded: function(key) {
 					if(this.peer === null) {
 						this.peer = new Peer({key:key});
 					}
 				},
 			
 				init: function() {
-					var app = this;
-					this.setPeerKey(scope.config.key);
+					var peerService = this;
+					this.createPeerIfNeded(this.key);
 					
 					this.peer.on('open', function(id) {
-						app.sendToParent(id);
+						peerService.sendToParent(id);
 					
-						app.peer.on('connection', function(conn) {							
-							app.initDataTransfer(conn);
+						peerService.peer.on('connection', function(conn) {							
+							peerService.initInterface(conn);
+							peerService.initConnection(conn);
 						});
 					
 					});
@@ -46,23 +43,27 @@ angular.module('app')
 					window.parent.postMessage(id, document.referrer);
 				},
 				
-				initDataTransfer: function(conn) {
+				initInterface: function(conn) {
+					scope.interface.sendData = function(data) {
+						conn.send(data)
+					};					
+				},
+				
+				initConnection: function(conn) {
 	
 					conn.on('data', function(data) {
-						scope.interface.reciveData(data)
+						peerService.onData(data)
 					});
 				
-					scope.$apply(function() {
-						scope.interface.sendData = function(data) {
-							conn.send(data)
-						};
-					});
-
+				},
+				
+				onData: function(data) {
+					scope.interface.reciveData(data)
 				}
-
+				
 			};
 				
-			app.init();
+			peerService.init();
 		}
 		
 	};
