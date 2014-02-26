@@ -83,7 +83,7 @@ angular.module('app')
 						peerService.notifyDataReceived(data);
 					});					
 					
-				},
+				}
 				
 			};
 				
