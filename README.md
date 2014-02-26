@@ -1,3 +1,3 @@
-demo
+Peer Connection Directive
 ====
 Developer branch
