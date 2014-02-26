@@ -19,10 +19,11 @@ angular.module('app')
 				peer: null,
 				
 				init: function() {
+					peerService.interface = scope.interface;
 					this.createPeerIfNeded(this.key);
 					this.initEvent();
 				},
-				
+
 				createPeerIfNeded: function(key) {
 					if(this.peer === null) {
 						this.peer = new Peer({key:key});
@@ -63,14 +64,13 @@ angular.module('app')
 					};
 				
 					scope.interface.disconnectPeer = function() {
-						peerService.disconnect(conn);
+						peerService.disconnectPeer(conn);
 					};
 					
 					scope.interface.destroyPeer = function() {
-						peerService.destroy(this.peer);
+						peerService.destroyPeer(this.peer);
 					};
 				
-					peerService.interface = scope.interface;
 				},
 				
 				initConnection: function(conn) {

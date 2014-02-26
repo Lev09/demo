@@ -16,11 +16,11 @@ angular.module('app')
     	conn.send(data);
     },
     
-    disconnect: function(conn) {
+    disconnectPeer: function(conn) {
     	conn.close();
     },
     
-    destroy: function(peer)	{
+    destroyPeer: function(peer)	{
     	peer.destroy();
     }
 	};
