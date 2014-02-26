@@ -8,9 +8,9 @@ angular.module('app')
 			this.interface.reciveData(data);
 		},
 		
-    sendData: function(conn, data) {
-    	conn.send(data);
-    }
+		sendData: function(conn, data) {
+			conn.send(data);
+		}
   	
 	};
 
