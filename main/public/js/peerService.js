@@ -7,22 +7,22 @@ angular.module('app')
 		notifyDataReceived: function(data) {
 			this.interface.reciveData(data);
 		},
+			
+		notifyError: function(error) {
+			this.interface.onError(error);
+		},
 		
-    notifyError: function(error) {
-    	this.interface.onError(error);
-    },
-    
-    sendData: function(conn, data) {
-    	conn.send(data);
-    },
-    
-    disconnectPeer: function(conn) {
-    	conn.close();
-    },
-    
-    destroyPeer: function(peer)	{
-    	peer.destroy();
-    }
+		sendData: function(conn, data) {
+			conn.send(data);
+		},
+		
+		disconnectPeer: function(conn) {
+		    conn.close();
+		},
+		
+		destroyPeer: function(peer)	{
+			peer.destroy();
+		}
 	};
 	
 });
