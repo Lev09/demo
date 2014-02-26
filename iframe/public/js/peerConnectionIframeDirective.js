@@ -1,5 +1,5 @@
 angular.module('app')
-.directive('peerConnection', function() {
+.directive('peerConnection', ['peerService', function(peerService) {
 	
 	return {
 		restrict: 'E',
@@ -13,7 +13,7 @@ angular.module('app')
 		
 		link: function(scope, elem, attr) {
 			
-			var peerService = {
+			var directive = {
 				key: "oftz4qdmchjxxbt9",
 				peer: null,
 				
@@ -24,15 +24,15 @@ angular.module('app')
 				},
 			
 				init: function() {
-					var peerService = this;
+					var directive = this;
 					this.createPeerIfNeded(this.key);
 					
 					this.peer.on('open', function(id) {
-						peerService.sendToParent(id);
+						directive.sendToParent(id);
 					
-						peerService.peer.on('connection', function(conn) {							
-							peerService.initInterface(conn);
-							peerService.initConnection(conn);
+						directive.peer.on('connection', function(conn) {							
+							directive.initInterface(conn);
+							directive.initConnection(conn);
 						});
 					
 					});
@@ -44,28 +44,27 @@ angular.module('app')
 				},
 				
 				initInterface: function(conn) {
+				
 					scope.interface.sendData = function(data) {
-						conn.send(data)
-					};					
+						peerService.sendData(conn, data);
+					};
+					
+					peerService.interface = scope.interface;					
 				},
 				
 				initConnection: function(conn) {
 	
 					conn.on('data', function(data) {
-						peerService.onData(data)
+						peerService.notifyDataReceived(data)
 					});
-				
-				},
-				
-				onData: function(data) {
-					scope.interface.reciveData(data)
+					
 				}
 				
 			};
 				
-			peerService.init();
+			directive.init();
 		}
 		
 	};
 	
-});
+}]);

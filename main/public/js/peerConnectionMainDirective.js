@@ -1,5 +1,5 @@
 angular.module('app')
-.directive('peerConnection', ['$sce', function($sce) {
+.directive('peerConnection', ['$sce', 'peerService', function($sce, peerService) {
 
 	return {
 		restrict: 'E',
@@ -12,10 +12,9 @@ angular.module('app')
 		template: '<iframe ng-src="{{url}}"></iframe>',
 		
 		link: function(scope, elem, attr) {
-			
 			scope.url = $sce.trustAsResourceUrl(attr.src);
 			
-			var peerService = {
+			var directive = {
 				key: "oftz4qdmchjxxbt9",
 				peer: null,
 				
@@ -29,29 +28,29 @@ angular.module('app')
 						this.peer = new Peer({key:key});
 
 						this.peer.on('error', function(error) {
-							peerService.onError(error);
+							peerService.notifyError(error);
 						});
 
 					}
 				},
 				
 				initEvent: function() {
-					var peerService = this;			
+					var directive = this;			
 					
 					window.addEventListener("message", function(event) {
-							peerService.connect(event.origin, event.data);
+							directive.connect(event.origin, event.data);
 					}, false);
 				
 				},
 				
 				connect: function(destOrigin, destId) {
-					var peerService = this;
+					var directive = this;
 					if(destOrigin === attr.src) {	
 						var conn = this.peer.connect(destId);
 
 						conn.on('open', function() {
-							peerService.initInterface(conn);
-							peerService.initConnection(conn);
+							directive.initInterface(conn);
+							directive.initConnection(conn);
 						});
 					
 					}
@@ -60,46 +59,37 @@ angular.module('app')
 				initInterface: function(conn) {
 				
 					scope.interface.sendData = function(data) {
-						conn.send(data);
+						peerService.sendData(conn, data);
 					};
 				
 					scope.interface.disconnectPeer = function() {
-						conn.close();
+						peerService.disconnect(conn);
 					};
 					
 					scope.interface.destroyPeer = function() {
-						this.peer.destroy();
+						peerService.destroy(this.peer);
 					};
 				
+					peerService.interface = scope.interface;
 				},
 				
 				initConnection: function(conn) {
-					var peerService = this;
 					
 					conn.on('error', function(error) {
-						peerService.onError(error);
+						peerService.notifyError(error);
 					});
 
 					conn.on('data', function(data) {
-						peerService.onData(data);
+						peerService.notifyDataReceived(data);
 					});					
 					
 				},
 				
-				onError: function(error) {
-					scope.interface.onError(error);
-				},
-
-				onData: function(data) {
-					scope.interface.reciveData(data);
-				}
-
 			};
 				
-			peerService.init();
+			directive.init();
 		}
 		
 	};
 	
 }]);
-
