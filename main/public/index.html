@@ -5,12 +5,12 @@
 		<script src="lib/jquery/dist/jquery.min.js"></script>
 		<script src="lib/angular/angular.min.js"></script>
 		<script src="js/appController.js"></script>
-		<script src="js/peerService.js"></script>
+		<script src="js/peerMainService.js"></script>
 		<script src="js/peerConnectionMainDirective.js"></script>
 	</head>
 	<body ng-controller="appController">
-		<peer-connection src="http://localhost:8002" interface="interface"></peer-connection>
-		<peer-connection src="http://localhost:8003" interface="interface"></peer-connection>
+		<peer-connection src="http://localhost:8002" key="oftz4qdmchjxxbt9" interface="interface"></peer-connection>
+		<peer-connection src="http://localhost:8003" key="oftz4qdmchjxxbt9" interface="interface"></peer-connection>
 		<button ng-click="send()">send</button>
 		<button ng-click="disconnectPeer()">disconnect</button>
 	</body>
