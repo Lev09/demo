@@ -23,11 +23,11 @@ angular.module('app', [])
 				controller.sendData("hello");
 			};
 			
-			$scope.destroy = function() {
+			$scope.destroyPeer = function() {
 				controller.destroyPeer();
 			};
 			
-			$scope.disconnect = function() {
+			$scope.disconnectPeer = function() {
 				controller.disconnectPeer();
 			};
 		
