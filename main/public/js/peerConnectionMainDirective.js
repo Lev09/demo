@@ -15,8 +15,8 @@ angular.module('app')
 			scope.url = $sce.trustAsResourceUrl(attr.src);
 			
 			var directive = {
-				key: "oftz4qdmchjxxbt9",
 				peer: null,
+				key: "oftz4qdmchjxxbt9",
 				
 				init: function() {
 					peerService.interface = scope.interface;
@@ -35,7 +35,7 @@ angular.module('app')
 					}
 				},
 				
-				initEvent: function() {
+				initEventForConnection: function() {
 					var directive = this;			
 					
 					window.addEventListener("message", function(event) {
