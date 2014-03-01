@@ -14,8 +14,8 @@ angular.module('app')
 		link: function(scope, elem, attr) {
 			
 			var directive = {
-				key: "oftz4qdmchjxxbt9",
 				peer: null,
+				key: "oftz4qdmchjxxbt9",
 				
 				createPeerIfNeded: function(key) {
 					if(this.peer === null) {
