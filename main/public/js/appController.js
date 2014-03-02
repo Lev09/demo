@@ -28,7 +28,7 @@ angular.module('app', [])
 			};
 			
 			$scope.disconnectPeer = function() {
-				controller.disconnectPeer();
+				controller.disconnect();
 			};
 		
 		},
@@ -45,8 +45,8 @@ angular.module('app', [])
 			alert(error.message);
 		},
 		
-		disconnectPeer: function() {
-			this.interface.disconnectPeer();
+		disconnect: function() {
+			this.interface.disconnectConnection();
 		},
 		
 		destroyPeer: function() {
